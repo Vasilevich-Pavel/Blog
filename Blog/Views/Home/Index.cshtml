@@ -1,0 +1,47 @@
+﻿@model List<Blog.Models.OneArticle>
+@{
+    ViewBag.Title = "Главная страница";
+}
+
+<div class="row">
+	<div class="col-md-4">
+		@foreach (var a in Model)
+	{
+		<div class="article-name">
+			<a href="/Articles/Article/@a.Article.Article_Id"><h3>@a.Article.Name</h3></a>
+		</div>
+
+		<div class="article-flex">
+
+			<div class="article-category">
+				<h4>@a.Category.Name</h4>
+			</div>
+			<div>
+				<h4>@a.Article.DateTime</h4>
+			</div>
+		</div>
+
+		if (HttpContext.Current.User.Identity.IsAuthenticated)
+		{
+			<div>
+				<a href="/Articles/Delete/@a.Article.Article_Id">Удалить</a>
+			</div>
+			<div>
+				<a href="/Articles/Edit/@a.Article.Article_Id">Редактировать</a>
+			</div>
+		}
+
+		<div>
+			<p>@a.Article.ShortDescription</p>
+		</div>
+		<br />
+
+}
+		@if (@ViewBag.index > 2)
+	{
+		int newIndex = @ViewBag.index - 2;
+		<a href="~/Home/Index/@newIndex">Предыдущая страница</a>
+}
+		<a href="~/Home/Index/@ViewBag.index">Следующая страница</a>
+	</div>
+</div>

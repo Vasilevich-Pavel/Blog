@@ -1,0 +1,27 @@
+﻿@model Blog.Models.OneArticle
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewBag.Title = Model.Article.Name;
+}
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="article-flex">
+			<div class="article-flex-1">
+				<div class="article-name">
+					<h3>@Model.Article.Name</h3>
+				</div>
+				<div class="article-category">
+					@*<h3>@a.Category.Name</h3>*@
+					<p>@Model.Article.DateTime</p>
+				</div>
+			</div>
+		</div>
+		<p>@Model.Article.ShortDescription</p>
+		<p>@Model.Article.Description</p>
+		<br />
+		<a href="~/Home/Index/">Назад</a>
+	</div>
+</div>
+

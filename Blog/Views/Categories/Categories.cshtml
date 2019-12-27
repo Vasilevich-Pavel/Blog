@@ -1,0 +1,34 @@
+﻿@model List<Blog.Models.Category>
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewBag.Title = "Категории";
+}
+
+<div class="container">
+	<h1>Категории</h1>
+	<table class="table-borderless">
+		@{
+		int length = Model.Count / 4;
+		int count = 0;
+		for (int i = count; i < length * 4; i += 4)
+		{
+		<tr>
+			<td style="min-width : 300px;"><a href="/Categories/Category?id_category=@Model[0].Category_Id&id_page=1"><h3>@Model[i].Name</h3></a></td>
+			<td style="min-width : 300px;"><a href="/Categories/Category?id_category=@Model[i + 1].Category_Id&id_page=1"><h3>@Model[i + 1].Name</h3></a></td>
+			<td style="min-width : 300px;"><a href="/Categories/Category?id_category=@Model[i + 2].Category_Id&id_page=1"><h3>@Model[i + 2].Name</h3></a></td>
+			<td style="min-width : 300px;"><a href="/Categories/Category?id_category=@Model[i + 3].Category_Id&id_page=1"><h3>@Model[i + 3].Name</h3></a></td>
+		</tr>
+		count = i + 4;
+		}
+
+		<tr style="border-color: transparent">
+			@for (int i = count; i < Model.Count; i++)
+			{
+			<td><a href="~/Categories/Category/@Model[i].Category_Id.1"><h3>@Model[i].Name</h3></a></td>
+			}
+		</tr>
+
+		}
+	</table>
+</div>

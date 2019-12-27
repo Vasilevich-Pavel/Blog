@@ -1,0 +1,31 @@
+﻿@model List<Blog.Models.OneArticle>
+@{
+	ViewBag.Title = "Главная страница";
+}
+
+<div class="row">
+	<div class="col-md-4">
+		@foreach (var a in Model)
+		{
+
+			<div class="article-flex">
+				<div class="article-name">
+					<a href="/Articles/Article/@a.Article.Article_Id"><h3>@a.Article.Name</h3></a>
+				</div>
+				<div class="article-category">
+					@*<h3>@a.Category.Name</h3>*@
+					<p>@a.Article.DateTime</p>
+				</div>
+			</div>
+
+			<p>@a.Article.ShortDescription</p>
+			<br />
+		}
+		@if (@ViewBag.index > 2)
+		{
+			int newIndex = @ViewBag.index - 2;
+			<a href="~/Categories/Category?id_category=@Model[0].Category.Category_Id&id_page=@newIndex">Предыдущая страница</a>
+		}
+		<a href="~/Categories/Category?id_category=@Model[0].Category.Category_Id&id_page=@ViewBag.index">Следующая страница</a>
+	</div>
+</div>
