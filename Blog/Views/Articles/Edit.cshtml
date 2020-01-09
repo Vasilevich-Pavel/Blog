@@ -1,0 +1,74 @@
+﻿@model Blog.Models.OneArticle
+
+@{
+	ViewBag.Title = "Редактирование";
+}
+
+<h2>Редактировать</h2>
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+	<h4>Редактирование статьи</h4>
+	<hr />
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+	<div class="form-group">
+		@Html.LabelFor(model => model.Article.Name, "Название статьи", htmlAttributes: new { @class = "control-label col-md-2" })
+		<div class="col-md-10">
+			@Html.EditorFor(model => model.Article.Name, new { htmlAttributes = new { @class = "form-control name", @autocomplete = "off", @value = Model.Article.Name } })
+			@Html.ValidationMessageFor(model => model.Article.Name, "", new { @class = "text-danger" })
+		</div>
+	</div>
+
+	<div class="form-group">
+		@Html.LabelFor(model => model.Article.Category_Id, "Категория", htmlAttributes: new { @class = "control-label col-md-2" })
+		<div class="col-md-10">
+			@Html.DropDownListFor(model => model.Article.Category_Id, Model.Categories, new { @class = "form-control ", @value = Model.Category.Name })
+			@Html.ValidationMessageFor(model => model.Article.Category_Id, "", new { @class = "text-danger" })
+		</div>
+	</div>
+
+	<div class="form-group">
+		@Html.LabelFor(model => model.Article.ShortDescription, "Краткое описание", htmlAttributes: new { @class = "control-label col-md-2" })
+		<div class="col-md-10">
+			@Html.TextAreaFor(model => model.Article.ShortDescription, new { @class = "form-control short-description", @value = Model.Article.ShortDescription })
+			@Html.ValidationMessageFor(model => model.Article.ShortDescription, "", new { @class = "text-danger" })
+		</div>
+	</div>
+
+	<div class="form-group">
+		@Html.LabelFor(model => model.Article.Description, "Текст статьи", htmlAttributes: new { @class = "control-label col-md-2" })
+		<div class="col-md-10">
+			@Html.TextAreaFor(model => model.Article.Description, new { @class = "form-control description", @value = Model.Article.Description })
+			@Html.ValidationMessageFor(model => model.Article.Description, "", new { @class = "text-danger" })
+		</div>
+	</div>
+
+	<div class="form-group">
+		@Html.LabelFor(model => model.Teg, "Теги", htmlAttributes: new { @class = "control-label col-md-2" })
+		<div class="col-md-10">
+			@Html.TextAreaFor(model => model.Teg, new { @class = "tegs form-control", @value = Model.Teg })
+			@Html.ValidationMessageFor(model => model.Teg, "", new { @class = "text-danger" })
+		</div>
+	</div>
+
+	<div class="form-group">
+		@Html.HiddenFor(model => model.Article.Article_Id, new { htmlAttributes = new { @class = "form-control", @value = Model.Article.Article_Id } })
+	</div>
+
+	<div class="form-group">
+		<div class="col-md-offset-2 col-md-10">
+			<input type="submit" onClick='location.href="http://localhost:52241/Home/Index/"' value="Опубликовать" class="btn btn-default" />
+		</div>
+	</div>
+</div>
+}
+
+<div>
+	@Html.ActionLink("Назад", "Index", "Home")
+</div>
+
+

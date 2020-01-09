@@ -1,4 +1,5 @@
-﻿using Blog.Models;
+﻿using Blog.Controllers;
+using Blog.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Blog
 		protected void Application_Start()
 		{
 			DataBaseSchema.CreateTables();
-			//DataBaseSchema.FillTables();
+			DataBaseSchema.FillTables();
 
 			AreaRegistration.RegisterAllAreas();
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

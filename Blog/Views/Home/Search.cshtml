@@ -1,0 +1,38 @@
+﻿@model List<Blog.Models.OneArticle>
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewBag.Title = "Главная страница";
+}
+
+<div class="row">
+	<div class="col-sm-7">
+		@foreach (var a in Model)
+		{
+			<div class="article-name">
+				<a href="/Articles/Article/@a.Article.Article_Id"><h3>@a.Article.Name</h3></a>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-3">
+					<h4>@a.Category.Name</h4>
+				</div>
+				<div class="col-sm-4 col-sm-offset-5">
+					<h4>@a.Article.DateTime</h4>
+				</div>
+			</div>
+
+			if (HttpContext.Current.User.Identity.IsAuthenticated)
+			{
+				<a href="/Articles/Delete/@a.Article.Article_Id">Удалить</a>
+				<a href="/Articles/Edit/@a.Article.Article_Id">Редактировать</a>
+				<br />
+			}
+
+			<div>
+				<p>@a.Article.ShortDescription</p>
+			</div>
+			<hr />
+		}
+
+	</div>
+</div>

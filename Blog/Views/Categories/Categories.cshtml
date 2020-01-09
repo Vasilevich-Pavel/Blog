@@ -1,34 +1,82 @@
-﻿@model List<Blog.Models.Category>
+﻿@model Blog.Models.ViewCategory
 
 @{
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	ViewBag.Title = "Категории";
 }
 
-<div class="container">
-	<h1>Категории</h1>
-	<table class="table-borderless">
-		@{
-		int length = Model.Count / 4;
-		int count = 0;
-		for (int i = count; i < length * 4; i += 4)
-		{
-		<tr>
-			<td style="min-width : 300px;"><a href="/Categories/Category?id_category=@Model[0].Category_Id&id_page=1"><h3>@Model[i].Name</h3></a></td>
-			<td style="min-width : 300px;"><a href="/Categories/Category?id_category=@Model[i + 1].Category_Id&id_page=1"><h3>@Model[i + 1].Name</h3></a></td>
-			<td style="min-width : 300px;"><a href="/Categories/Category?id_category=@Model[i + 2].Category_Id&id_page=1"><h3>@Model[i + 2].Name</h3></a></td>
-			<td style="min-width : 300px;"><a href="/Categories/Category?id_category=@Model[i + 3].Category_Id&id_page=1"><h3>@Model[i + 3].Name</h3></a></td>
-		</tr>
-		count = i + 4;
-		}
+<h2>Категории</h2>
 
-		<tr style="border-color: transparent">
-			@for (int i = count; i < Model.Count; i++)
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+	<div class="row">
+		<div class="form-horizontal">
+				@{
+					int length = Model.Categories.Count / 4;
+					int count = 0;
+					for (int i = count; i < length * 4; i += 4)
+					{
+							<div class="row col-md-10">
+								@for (int j = 0; j < 4; j++)
+								{
+									<div class="col-sm-3">
+										<a href="/Categories/Category?id_category=@Model.Categories[i + j].Category_Id&id_page=1"><h3>@Model.Categories[i + j].Name</h3></a>
+										@{
+											if (HttpContext.Current.User.Identity.IsAuthenticated && Model.Categories[i + j].Name != "Без категории")
+											{
+												<a href="/Categories/Delete?id_category=@Model.Categories[i + j].Category_Id">Удалить</a>
+												<a href="/Categories/Edit?id_category=@Model.Categories[i + j].Category_Id">Редактировать</a>
+											}
+										}
+									</div>
+										}
+								</div>
+						count = i + 4;
+					}
+
+					<div class="row col-md-10">
+						@for (int i = count; i < Model.Categories.Count; i++)
+						{
+							<div class="col-sm-3">
+							<a href="~/Categories/Category?id_category=@Model.Categories[i].Category_Id&id_page=1"><h3>@Model.Categories[i].Name</h3></a>
+							@{
+								if (HttpContext.Current.User.Identity.IsAuthenticated && Model.Categories[i].Name != "Без категории")
+								{
+									<a href="/Categories/Delete?id_category=@Model.Categories[i].Category_Id">Удалить</a>
+									<a href="/Categories/Edit?id_category=@Model.Categories[i].Category_Id">Редактировать</a>
+								}
+							}
+							</div>
+						}
+					</div>
+
+				}
+		
+			@if (HttpContext.Current.User.Identity.IsAuthenticated)
 			{
-			<td><a href="~/Categories/Category/@Model[i].Category_Id.1"><h3>@Model[i].Name</h3></a></td>
-			}
-		</tr>
 
-		}
-	</table>
-</div>
+			<hr />
+			<div class="col-md-10">
+			<h3>Добавить категорию</h3>
+
+			@Html.ValidationSummary("Допустимые символы: буквы лaтинского и русского алфавитов и цифры. Допустимая длина: 1 - 15 символов", new { @class = "text-danger" })
+			<div class="form-group">
+				@Html.LabelFor(model => model.NewCategory.Name, "Категория", htmlAttributes: new { @class = "control-label col-md-2" })
+				<div class="col-md-10">
+					@Html.EditorFor(model => model.NewCategory.Name, new { htmlAttributes = new { @class = "form-control category", @autocomplete = "off", @required = "on", @placeholder = "Введите категорию", @pattern = "^[А-Яа-яЁёA-Za-z\\d]{1, 15}$" } })
+				</div>
+			</div>
+
+
+
+			<div class="form-group">
+				<div class="col-md-offset-2 col-md-10">
+					<input type="submit" value="Добавить" class="btn btn-default" />
+				</div>
+			</div>
+			</div>
+			}
+		</div>
+	</div>
+	}

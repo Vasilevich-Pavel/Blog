@@ -1,72 +1,21 @@
 ﻿using ServiceStack.OrmLite;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 
 namespace Blog.Models
 {
-	public class DataBaseCategory
+	public class DataBaseCategories
 	{
-		private OrmLiteConnectionFactory dbFactory = new OrmLiteConnectionFactory("server=localhost;user id=root;password=mysql;database=blog;", MySqlDialect.Provider);
+		private OrmLiteConnectionFactory dbFactory = new OrmLiteConnectionFactory(ConfigurationManager.ConnectionStrings["conn"].ConnectionString, MySqlDialect.Provider);
 
 		public void CreateTable()
 		{
 			using (var db = dbFactory.Open())
 			{
 				db.CreateTable<Category>();
-			}
-		}
-
-		public void Insert()
-		{
-			using (var db = dbFactory.Open())
-			{
-				List<Category> categories = new List<Category>();
-
-				Category category1 = new Category
-				{
-					Name = "Здоровье и спорт"
-				};
-				categories.Add(category1);
-
-				Category category2 = new Category
-				{
-					Name = "Семья"
-				};
-				categories.Add(category2);
-
-				Category category3 = new Category
-				{
-					Name = "Музыка"
-				};
-				categories.Add(category3);
-
-				Category category4 = new Category
-				{
-					Name = "Фильмы"
-				};
-				categories.Add(category4);
-
-				Category category5 = new Category
-				{
-					Name = "Книги"
-				};
-				categories.Add(category5);
-
-				Category category6 = new Category
-				{
-					Name = "Путешествия"
-				};
-				categories.Add(category6);
-
-				Category category7= new Category
-				{
-					Name = "Без категории"
-				};
-				categories.Add(category7);
-
-				db.InsertAll(categories);
 			}
 		}
 
@@ -81,6 +30,39 @@ namespace Blog.Models
 
 				long id = db.Insert(category, selectIdentity: true);
 				return Convert.ToInt32(id);
+			}
+		}
+
+		public void Insert()
+		{
+			using (var db = dbFactory.Open())
+			{
+				var single = db.Single<Category>(x => x.Name == "Без категории");
+
+				if (single == null)
+				{
+
+					Category category = new Category
+					{
+						Name = "Без категории"
+					};
+
+					db.Insert(category);
+				}
+			}
+		}
+
+		public bool Insert(Category category)
+		{
+			using (var db = dbFactory.Open())
+			{
+				var single = db.Single<Category>(x => x.Name == category.Name);
+				if (single == null)
+				{
+					db.Insert(category);
+					return true;
+				}
+				return false;
 			}
 		}
 
@@ -129,6 +111,34 @@ namespace Blog.Models
 			using (var db = dbFactory.Open())
 			{
 				return db.Single<Category>(x => x.Category_Id == id);
+			}
+		}
+
+		public int SelectWithoutCategory()
+		{
+			using (var db = dbFactory.Open())
+			{
+				return db.Single<Category>(x => x.Name == "Без категории").Category_Id;
+			}
+		}
+
+		public void Delete(int? id)
+		{
+			using (var db = dbFactory.Open())
+			{
+				db.Delete<Category>(x => x.Category_Id == id);
+			}
+		}
+
+		public void Update(Category category)
+		{
+			using (var db = dbFactory.Open())
+			{
+				db.UpdateOnly(() => new Category
+				{
+					Name = category.Name,
+				},
+					where: x => x.Category_Id == category.Category_Id);
 			}
 		}
 	}

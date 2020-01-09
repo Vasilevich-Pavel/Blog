@@ -1,26 +1,19 @@
-﻿using Blog.Models.DataBase;
-using ServiceStack.OrmLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Blog.Models
+﻿namespace Blog.Models
 {
 	public class DataBaseSchema
 	{
 		public static void CreateTables()
 		{
-			DataBaseUser user = new DataBaseUser();
+			DataBaseUsers user = new DataBaseUsers();
 			user.CreateTables();
 
-			DataBaseCategory category = new DataBaseCategory();
+			DataBaseCategories category = new DataBaseCategories();
 			category.CreateTable();
 
-			DataBaseTeg teg = new DataBaseTeg();
+			DataBaseTegs teg = new DataBaseTegs();
 			teg.CreateTable();
 
-			DataBaseArticle article = new DataBaseArticle();
+			DataBaseArticles article = new DataBaseArticles();
 			article.CreateTable();
 
 			DataBaseArticles_Tegs articles_Tegs = new DataBaseArticles_Tegs();
@@ -29,8 +22,11 @@ namespace Blog.Models
 
 		public static void FillTables()
 		{
-			DataBaseCategory category = new DataBaseCategory();
+			DataBaseCategories category = new DataBaseCategories();
 			category.Insert();
+
+			DataBaseUsers dataBaseUsers = new DataBaseUsers();
+			dataBaseUsers.Insert();
 		}
 	}
 }

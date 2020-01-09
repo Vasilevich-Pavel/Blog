@@ -1,31 +1,64 @@
 ﻿@model List<Blog.Models.OneArticle>
 @{
-	ViewBag.Title = "Главная страница";
+	ViewBag.Title = "Категории";
 }
 
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-sm-7">
 		@foreach (var a in Model)
 		{
+			<div class="article-name">
+				<a href="/Articles/Article/@a.Article.Article_Id"><h3>@a.Article.Name</h3></a>
+			</div>
 
-			<div class="article-flex">
-				<div class="article-name">
-					<a href="/Articles/Article/@a.Article.Article_Id"><h3>@a.Article.Name</h3></a>
+			<div class="row">
+				<div class="col-sm-3">
+					<h4>@a.Category.Name</h4>
 				</div>
-				<div class="article-category">
-					@*<h3>@a.Category.Name</h3>*@
-					<p>@a.Article.DateTime</p>
+				<div class="col-sm-4 col-sm-offset-5">
+					<h4>@a.Article.DateTime</h4>
 				</div>
 			</div>
 
-			<p>@a.Article.ShortDescription</p>
-			<br />
+			if (HttpContext.Current.User.Identity.IsAuthenticated)
+			{
+				<p><a href="/Articles/Delete/@a.Article.Article_Id">Удалить</a></p>
+				<p><a href="/Articles/Edit/@a.Article.Article_Id">Редактировать</a></p>
+				<br />
+			}
+
+			<div>
+				<p>@a.Article.ShortDescription</p>
+			</div>
+			<hr />
 		}
-		@if (@ViewBag.index > 2)
-		{
-			int newIndex = @ViewBag.index - 2;
-			<a href="~/Categories/Category?id_category=@Model[0].Category.Category_Id&id_page=@newIndex">Предыдущая страница</a>
-		}
-		<a href="~/Categories/Category?id_category=@Model[0].Category.Category_Id&id_page=@ViewBag.index">Следующая страница</a>
+
+		<div class="row justify-content-center">
+
+			@if (ViewBag.index > 2)
+			{
+				int newIndex = @ViewBag.index - 2;
+			<div class="col-sm-3">
+				<a href="~/Categories/Category?id_category=@Model[0].Category.Category_Id&id_page=@newIndex">Предыдущая страница</a>
+			</div>
+			}
+			@if (ViewBag.end == 0)
+			{
+				if (ViewBag.index > 2)
+				{
+					<div class="col-sm-3 col-sm-offset-5">
+						<a href="~/Categories/Category?id_category=@Model[0].Category.Category_Id&id_page=@ViewBag.index">Следующая страница</a>
+					</div>
+				}
+				else
+				{
+					<div class="col-sm-3 col-sm-offset-8">
+						<a href="~/Categories/Category?id_category=@Model[0].Category.Category_Id&id_page=@ViewBag.index">Следующая страница</a>
+					</div>
+				}
+			}
+		</div>
+
 	</div>
 </div>
+

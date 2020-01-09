@@ -25,7 +25,7 @@ namespace Blog.Controllers
 			if (ModelState.IsValid)
 			{
 				User user = null;
-				DataBaseUser db = new DataBaseUser();
+				DataBaseUsers db = new DataBaseUsers();
 				user = db.GetUser(model);
 
 				if (user != null)
@@ -35,7 +35,7 @@ namespace Blog.Controllers
 				}
 				else
 				{
-					ModelState.AddModelError("", "Пользователя с таким логином и паролем нет");
+					ModelState.AddModelError("", "Неверный логин или пароль");
 				}
 			}
 
@@ -44,20 +44,21 @@ namespace Blog.Controllers
 
 		//Register
 
-        public ActionResult Register()
+		[Authorize]
+		public ActionResult Register()
         {
             return View();
         }
 
 		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[Authorize]
 		public ActionResult Register(RegisterModel model)
 		{
 			if(ModelState.IsValid)
 			{
 				User user = null;
-				DataBaseUser db = new DataBaseUser();
-				user = db.GetUser(model.Login);
+				DataBaseUsers db = new DataBaseUsers();
+				user = db.GetUser(model);
 
 				if(user == null)
 				{
@@ -73,7 +74,7 @@ namespace Blog.Controllers
 				}
 				else
 				{
-					ModelState.AddModelError("", "Пользователь с таким логином уже существует");
+					ModelState.AddModelError("", "Пользователь с таким логином или email существует");
 				}
 			}
 
@@ -86,7 +87,7 @@ namespace Blog.Controllers
 		public ActionResult Admin()
 		{
 			string userName = HttpContext.User.Identity.Name;
-			DataBaseUser dataBaseUser = new DataBaseUser();
+			DataBaseUsers dataBaseUser = new DataBaseUsers();
 			var user = dataBaseUser.GetUser(userName);
 
 			return View(user);
@@ -117,6 +118,9 @@ namespace Blog.Controllers
 					case "registerAdmin":
 
 						return RedirectToAction("Register", "Account");
+
+					default:
+						return RedirectToAction("Index", "Home");
 				}
 			}
 
@@ -125,13 +129,17 @@ namespace Blog.Controllers
 
 		private User SaveAdmin(User user)
 		{
-			DataBaseUser dataBaseUser = new DataBaseUser();
+			ExitAdmin(user);
+
+			DataBaseUsers dataBaseUser = new DataBaseUsers();
 			dataBaseUser.UpdateUser(user);
 
-			ModelState.AddModelError("", "Пользователь изменен");
+			var newUser = dataBaseUser.GetUser(user.User_Id);
+			FormsAuthentication.SetAuthCookie(newUser.Login, true);
 
+			ModelState.AddModelError("", "Пользователь изменен");
 			Response.Redirect(Request.Path);
-			return dataBaseUser.GetUser(user.User_Id);
+			return newUser;
 		}
 
 		private void ExitAdmin(User user)
@@ -148,7 +156,9 @@ namespace Blog.Controllers
 
 		private void DeleteAdmin(User user)
 		{
-			DataBaseUser dataBaseUser = new DataBaseUser();
+			ExitAdmin(user);
+
+			DataBaseUsers dataBaseUser = new DataBaseUsers();
 			dataBaseUser.DeleteUser(user.User_Id);
 		}
 
@@ -170,7 +180,7 @@ namespace Blog.Controllers
 			message.Subject = "Восстановление пароля";
 			message.Body = "Ваш новый пароль : " + newPassword + "\nС уважением, Blog.com";
 
-			DataBaseUser dataBaseUser = new DataBaseUser();
+			DataBaseUsers dataBaseUser = new DataBaseUsers();
 			dataBaseUser.UpdatePassword(Email, newPassword);
 
 			SmtpClient smtp = new SmtpClient("smtp.yandex.by", 587)

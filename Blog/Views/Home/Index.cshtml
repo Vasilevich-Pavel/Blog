@@ -1,47 +1,136 @@
-﻿@model List<Blog.Models.OneArticle>
+﻿@model Blog.Models.SearchModel
 @{
-    ViewBag.Title = "Главная страница";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewBag.Title = "Главная страница";
 }
 
 <div class="row">
-	<div class="col-md-4">
-		@foreach (var a in Model)
-	{
-		<div class="article-name">
-			<a href="/Articles/Article/@a.Article.Article_Id"><h3>@a.Article.Name</h3></a>
-		</div>
-
-		<div class="article-flex">
-
-			<div class="article-category">
-				<h4>@a.Category.Name</h4>
-			</div>
-			<div>
-				<h4>@a.Article.DateTime</h4>
-			</div>
-		</div>
-
-		if (HttpContext.Current.User.Identity.IsAuthenticated)
+	<div class="col-sm-7">
+		@foreach (var a in Model.OneArticles)
 		{
-			<div>
-				<a href="/Articles/Delete/@a.Article.Article_Id">Удалить</a>
+			<div class="article-name">
+				<a href="/Articles/Article/@a.Article.Article_Id"><h3>@a.Article.Name</h3></a>
 			</div>
-			<div>
-				<a href="/Articles/Edit/@a.Article.Article_Id">Редактировать</a>
+
+			<div class="row">
+				<div class="col-sm-3">
+					<h4>@a.Category.Name</h4>
+				</div>
+				<div class="col-sm-4 col-sm-offset-5">
+					<h4>@a.Article.DateTime</h4>
+				</div>
 			</div>
+
+			if (HttpContext.Current.User.Identity.IsAuthenticated)
+			{
+				<p><a href="/Articles/Delete/@a.Article.Article_Id">Удалить</a></p>
+				<p><a href="/Articles/Edit/@a.Article.Article_Id">Редактировать</a></p>
+				<br />
+			}
+
+				<div>
+				<p>@a.Article.ShortDescription</p>
+			</div>
+			<hr />
 		}
 
-		<div>
-			<p>@a.Article.ShortDescription</p>
-		</div>
-		<br />
+			<div class="row justify-content-center">
 
-}
-		@if (@ViewBag.index > 2)
-	{
-		int newIndex = @ViewBag.index - 2;
-		<a href="~/Home/Index/@newIndex">Предыдущая страница</a>
-}
-		<a href="~/Home/Index/@ViewBag.index">Следующая страница</a>
+			@if (ViewBag.index > 2)
+			{
+				int newIndex = @ViewBag.index - 2;
+				<div class="col-sm-3">
+					<a href="~/Home/Index/@newIndex">Предыдущая страница</a>
+				</div>
+			}
+			@if (ViewBag.end == 0) {
+				if (ViewBag.index > 2)
+				{
+				<div class="col-sm-3 col-sm-offset-5">
+					<a href="~/Home/Index/@ViewBag.index">Следующая страница</a>
+				</div>
+				}
+				else
+				{
+					<div class="col-sm-3 col-sm-offset-8">
+					<a href="~/Home/Index/@ViewBag.index">Следующая страница</a>
+				</div>
+				}
+			}
+			</div>
+
+	</div>
+
+	<div class="col-sm-4 col-sm-offset-1">
+
+		@using (Html.BeginForm("Search", "Home"))
+		{
+			string month = DateTime.Today.Month.ToString();
+			if(month.Length == 1)
+			{
+				month = "0" + month;
+			}
+
+			string day = DateTime.Today.Day.ToString();
+			if (day.Length == 1)
+			{
+				day = "0" + day;
+			}
+
+			string nowDate = DateTime.Today.Year.ToString() + '-' + month + '-' + day;
+
+		@Html.AntiForgeryToken()
+
+		<div class="form-horizontal">
+			<h3>Поиск статей</h3>
+
+			<hr />
+
+			<h4>Поиск по дате</h4>
+			<div class="form-group">
+				@Html.LabelFor(model => model.From, "От", htmlAttributes: new { @class = "control-label col-md-3" })
+				<div class="col-md-9">
+					@Html.EditorFor(model => model.From, new { htmlAttributes = new { @class = "form-control account", type = "date", min = "2019-01-01", max = nowDate, value = "2019-01-01" } })
+					@Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(model => model.To, "До", htmlAttributes: new { @class = "control-label col-md-3" })
+				<div class="col-md-9">
+					@Html.EditorFor(model => model.To, new { htmlAttributes = new { @class = "form-control account", type = "date", min = "2019-01-01", max = nowDate, value = nowDate } })
+					@Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<hr />
+			<h4>Поиск по категории</h4>
+			<div class="form-group">
+				@Html.LabelFor(model => model.CategoryId, "Категория", htmlAttributes: new { @class = "control-label col-md-3" })
+				<div class="col-md-9">
+					@Html.DropDownListFor(model => model.CategoryId, Model.Categories, new { @class = "form-control " })
+					@Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<hr />
+			<h4>Поиск по тегам</h4>
+			<p>(каждый тег начинается со знака #)</p>
+			<div class="form-group">
+				@Html.LabelFor(model => model.Tegs, "Теги", htmlAttributes: new { @class = "control-label col-md-3" })
+				<div class="col-md-9">
+					@Html.EditorFor(model => model.Tegs, new { htmlAttributes = new { @class = "form-control account", @autocomplete = "off", @placeholder = "Введите теги", @pattern = "^#[A-Za-zА-Яа-яЁё\\d_-]{1, 15}" } })
+					@Html.ValidationMessageFor(model => model.Tegs, "Допустимые символы: буквы лaтинского и русского алфавитов, цифры и знак подчеркивания. Допустимая длина: 1 - 15 символов", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-md-offset-3 col-md-9">
+					<input type="submit" value="Поиск" class="btn btn-default" />
+				</div>
+			</div>
+		</div>
+		}
+
 	</div>
 </div>

@@ -13,6 +13,7 @@ namespace Blog.Models
 		[AutoIncrement]
 		public int User_Id { get; set; }
 
+		[Unique]
 		[Required]
 		[StringLength(50)]
 		public string Login { get; set; }
@@ -21,6 +22,7 @@ namespace Blog.Models
 		[StringLength(30)]
 		public string Password { get; set; }
 
+		[Unique]
 		[Required]
 		[StringLength(50)]
 		public string Email { get; set; }

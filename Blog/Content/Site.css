@@ -17,14 +17,42 @@
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
+select {
     max-width: 280px;
 }
 
-.article-flex {
-	display: flex;
+.name {
+	width: 800px;
+}
+
+.account {
+	width: 300px;
+}
+
+textarea.form-control.short-description {
+	height: 150px;
+	width: 800px;
+	resize: none;
+}
+
+textarea.form-control.description {
+	width: 800px;
+	height: 350px;
+	resize: none;
+}
+
+textarea.form-control.tegs {
+	width: 800px;
+	height: 100px;
+	resize: none;
+}
+
+footer {
+	text-align: center;
+}
+
+.category {
+	width: 400px;
 }
 
 

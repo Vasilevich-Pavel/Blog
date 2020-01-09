@@ -13,15 +13,18 @@
 					<h3>@Model.Article.Name</h3>
 				</div>
 				<div class="article-category">
-					@*<h3>@a.Category.Name</h3>*@
+					<h3>@Model.Category.Name</h3>
 					<p>@Model.Article.DateTime</p>
 				</div>
 			</div>
 		</div>
-		<p>@Model.Article.ShortDescription</p>
+		<h4>@Model.Article.ShortDescription</h4>
 		<p>@Model.Article.Description</p>
-		<br />
-		<a href="~/Home/Index/">Назад</a>
+		<p>
+			@foreach(var teg in Model.Tegs){
+			<a href="~/Articles/Tegs?id_teg=@teg.Teg_Id">@teg.Name</a>
+			}
+		</p>
 	</div>
 </div>
 

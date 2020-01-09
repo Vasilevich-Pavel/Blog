@@ -18,7 +18,7 @@
 	<div class="form-group">
 		@Html.LabelFor(model => model.Article.Name, "Название статьи", htmlAttributes: new { @class = "control-label col-md-2"})
 		<div class="col-md-10">
-			@Html.EditorFor(model => model.Article.Name, new { htmlAttributes = new { @class = "form-control" , @autocomplete = "off"} })
+			@Html.EditorFor(model => model.Article.Name, new { htmlAttributes = new { @class = "form-control name", @autocomplete = "off"} })
 			@Html.ValidationMessageFor(model => model.Article.Name, "", new { @class = "text-danger" })
 		</div>
 	</div>
@@ -26,7 +26,7 @@
 	<div class="form-group">
 		@Html.LabelFor(model => model.CategoryId, "Категория", htmlAttributes: new { @class = "control-label col-md-2" })
 		<div class="col-md-10">
-			@Html.DropDownListFor(model => model.CategoryId, Model.Categories,  new { htmlAttributes = new { @class = "form-control" } })
+			@Html.DropDownListFor(model => model.CategoryId, Model.Categories,  new { @class = "form-control " })
 			@Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
 		</div>
 	</div>
@@ -34,15 +34,15 @@
 	<div class="form-group">
 		@Html.LabelFor(model => model.Article.ShortDescription, "Краткое описание", htmlAttributes: new { @class = "control-label col-md-2" })
 		<div class="col-md-10">
-			@Html.TextAreaFor(model => model.Article.ShortDescription, new { htmlAttributes = new { @class = "form-control", @rows = 30, @cols = 50 } })
+			@Html.TextAreaFor(model => model.Article.ShortDescription, new { @class = "form-control short-description" })
 			@Html.ValidationMessageFor(model => model.Article.ShortDescription, "", new { @class = "text-danger" })
 		</div>
 	</div>
 
 	<div class="form-group">
-		@Html.LabelFor(model => model.Article.Description, "Текст статьи", htmlAttributes: new { @class = "control-label col-md-2", @rows = 30, @cols = 50 })
+		@Html.LabelFor(model => model.Article.Description, "Текст статьи", htmlAttributes: new { @class = "control-label col-md-2"})
 		<div class="col-md-10">
-			@Html.TextAreaFor(model => model.Article.Description, new { htmlAttributes = new { @class = "form-control" } })
+			@Html.TextAreaFor(model => model.Article.Description, new { @class = "form-control description" })
 			@Html.ValidationMessageFor(model => model.Article.Description, "", new { @class = "text-danger" })
 		</div>
 	</div>
@@ -50,19 +50,16 @@
 	<div class="form-group">
 		@Html.LabelFor(model => model.Tegs, "Теги", htmlAttributes: new { @class = "control-label col-md-2" })
 		<div class="col-md-10">
-			@Html.TextAreaFor(model => model.Tegs, new { htmlAttributes = new { @class = "form-control" } })
+			@Html.TextAreaFor(model => model.Tegs, new { @class = "tegs form-control" })
 			@Html.ValidationMessageFor(model => model.Tegs, "", new { @class = "text-danger" })
 		</div>
 	</div>
 
 	<div class="form-group">
 		<div class="col-md-offset-2 col-md-10">
-			<input type="submit" onClick='location.href="http://localhost:52241/Home/Index/"' value="Опубликовать" class="btn btn-default" />
+			<input type="submit" value="Опубликовать" class="btn btn-default" />
 		</div>
 	</div>
 </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
